@@ -110,7 +110,9 @@ class CropAndExtract():
             oy1, oy2, ox1, ox2 = 0, x_full_frames[0].shape[0], 0, x_full_frames[0].shape[1] 
             crop_info = ((ox2 - ox1, oy2 - oy1), None, None)
 
-        frames_pil = [Image.fromarray(cv2.resize(frame,(pic_size, pic_size))) for frame in x_full_frames]
+        # frames_pil = [Image.fromarray(cv2.resize(frame,(pic_size, pic_size))) for frame in x_full_frames]
+        print('TASOS: modified to use the original size')
+        frames_pil = [Image.fromarray(frame) for frame in x_full_frames]
         if len(frames_pil) == 0:
             print('No face is detected in the input file')
             return None, None
