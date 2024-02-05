@@ -3,6 +3,9 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+# assignment specific input files
+examples/Tech_assignment/*
+
 # C extensions
 *.so
 
