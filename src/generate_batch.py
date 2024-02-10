@@ -81,8 +81,26 @@ def get_data(first_coeff_path, audio_path, device, ref_eyeblink_coeff_path, stil
     ratio = generate_blink_seq_randomly(num_frames)      # T
     source_semantics_path = first_coeff_path
     source_semantics_dict = scio.loadmat(source_semantics_path)
-    ref_coeff = source_semantics_dict['coeff_3dmm'][:1,:70]         #1 70
-    ref_coeff = np.repeat(ref_coeff, num_frames, axis=0)
+    # ref_coeff = source_semantics_dict['coeff_3dmm'][:1,:70]         #1 70
+    # ref_coeff = np.repeat(ref_coeff, num_frames, axis=0)
+    print('TASOS: Modification to use ALL the landmarks of the frames in the video')
+    A = np.arange(0, len(source_semantics_dict['coeff_3dmm']), 60)
+    increment = 60 / 25  # because fps==25 and original video 60 TODO: change this to a variable!
+    B = [int(np.rint(increment * float(i))) for i in range(25)]
+    B = np.array(B)
+    ind_kept = [i + j for i in A[:-1] for j in B]
+    ref_coeff = source_semantics_dict['coeff_3dmm'][ind_kept, :70]
+    # get the first num_frames only
+    ref_coeff = ref_coeff[:num_frames, :70]
+    # if ref_coeff.shape[0] < num_frames then repeat the last frame
+    if ref_coeff.shape[0] < num_frames:
+        div = num_frames // ref_coeff.shape[0]
+        re = num_frames % ref_coeff.shape[0]
+        ref_coeff_list = [ref_coeff for i in range(div)]
+        ref_coeff_list.append(ref_coeff[-re:, :]) # (ref_coeff[:re, :])
+        ref_coeff = np.concatenate(ref_coeff_list, axis=0)
+        print(ref_coeff.shape[0])
+
 
     if ref_eyeblink_coeff_path is not None:
         ratio[:num_frames] = 0

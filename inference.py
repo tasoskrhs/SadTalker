@@ -44,7 +44,8 @@ def main(args):
     os.makedirs(first_frame_dir, exist_ok=True)
     print('3DMM Extraction for source image')
     first_coeff_path, crop_pic_path, crop_info =  preprocess_model.generate(pic_path, first_frame_dir, args.preprocess,\
-                                                                             source_image_flag=True, pic_size=args.size)
+                                                                             # source_image_flag=True, pic_size=args.size)
+                                                                            source_image_flag=False, pic_size=args.size)  # to prevent from reading ONLY the first frame!
     if first_coeff_path is None:
         print("Can't get the coeffs of the input")
         return
@@ -138,6 +139,8 @@ if __name__ == '__main__':
 
     if torch.cuda.is_available() and not args.cpu:
         args.device = "cuda"
+    # elif torch.backends.mps.is_available() and not args.cpu:
+    #     args.device = "mps"
     else:
         args.device = "cpu"
 

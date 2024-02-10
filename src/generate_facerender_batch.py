@@ -35,7 +35,9 @@ def get_facerender_data(coeff_path, pic_path, first_coeff_path, audio_path,
         source_semantics = source_semantics_dict['coeff_3dmm'][:1,:73]         #1 70
         generated_3dmm = generated_dict['coeff_3dmm'][:,:70]
 
-    source_semantics_new = transform_semantic_1(source_semantics, semantic_radius)
+    # source_semantics_new = transform_semantic_1(source_semantics, semantic_radius)
+    print('Modification in generate_facerender_batch.py: source_semantics_new')
+    source_semantics_new = source_semantics_dict['coeff_3dmm'][:semantic_radius*2+1, :73].transpose(1,0)
     source_semantics_ts = torch.FloatTensor(source_semantics_new).unsqueeze(0)
     source_semantics_ts = source_semantics_ts.repeat(batch_size, 1, 1)
     data['source_semantics'] = source_semantics_ts
