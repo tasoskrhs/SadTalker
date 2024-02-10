@@ -51,18 +51,18 @@ def generate_blink_seq_randomly(num_frames):
 def get_data(first_coeff_path, audio_path, device, ref_eyeblink_coeff_path, still=False, idlemode=False, length_of_audio=False, use_blink=True):
 
     syncnet_mel_step_size = 16
-    fps = 25
+    fps = 60 # 25
 
     pic_name = os.path.splitext(os.path.split(first_coeff_path)[-1])[0]
     audio_name = os.path.splitext(os.path.split(audio_path)[-1])[0]
 
     
     if idlemode:
-        num_frames = int(length_of_audio * 25)
+        num_frames = int(length_of_audio * fps) # * 25)
         indiv_mels = np.zeros((num_frames, 80, 16))
     else:
         wav = audio.load_wav(audio_path, 16000) 
-        wav_length, num_frames = parse_audio_length(len(wav), 16000, 25)
+        wav_length, num_frames = parse_audio_length(len(wav), 16000, fps) # 25)
         wav = crop_pad_audio(wav, wav_length)
         orig_mel = audio.melspectrogram(wav).T
         spec = orig_mel.copy()         # nframes 80
@@ -84,9 +84,9 @@ def get_data(first_coeff_path, audio_path, device, ref_eyeblink_coeff_path, stil
     # ref_coeff = source_semantics_dict['coeff_3dmm'][:1,:70]         #1 70
     # ref_coeff = np.repeat(ref_coeff, num_frames, axis=0)
     print('TASOS: Modification to use ALL the landmarks of the frames in the video')
-    A = np.arange(0, len(source_semantics_dict['coeff_3dmm']), 60)
-    increment = 60 / 25  # because fps==25 and original video 60 TODO: change this to a variable!
-    B = [int(np.rint(increment * float(i))) for i in range(25)]
+    A = np.arange(0, len(source_semantics_dict['coeff_3dmm']), 60) # TODO: change 60 to a variable depending on video fps!
+    increment = 60 / fps
+    B = [int(np.rint(increment * float(i))) for i in range(fps)]
     B = np.array(B)
     ind_kept = [i + j for i in A[:-1] for j in B]
     ref_coeff = source_semantics_dict['coeff_3dmm'][ind_kept, :70]
