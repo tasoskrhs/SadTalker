@@ -202,7 +202,7 @@ class AnimateFromCoeff():
         video_name = x['video_name']  + '.mp4'
         path = os.path.join(video_save_dir, 'temp_'+video_name)
         
-        imageio.mimsave(path, result,  fps=float(25))
+        imageio.mimsave(path, result,  fps=float(60)) # float(25))
 
         av_path = os.path.join(video_save_dir, video_name)
         return_path = av_path 
@@ -214,7 +214,7 @@ class AnimateFromCoeff():
         # cog will not keep the .mp3 filename
         sound = AudioSegment.from_file(audio_path)
         frames = frame_num 
-        end_time = start_time + frames*1/25*1000
+        end_time = start_time + frames*1/60*1000 #frames*1/25*1000
         word1=sound.set_frame_rate(16000)
         word = word1[start_time:end_time]
         word.export(new_audio_path, format="wav")
