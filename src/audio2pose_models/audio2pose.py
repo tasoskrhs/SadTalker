@@ -88,7 +88,9 @@ class Audio2Pose(nn.Module):
         pose_motion_pred = torch.cat(pose_motion_pred_list, dim = 1)
         batch['pose_motion_pred'] = pose_motion_pred
 
-        pose_pred = ref[:, :1, -6:] + pose_motion_pred  # bs T 6
+        # pose_pred = ref[:, :1, -6:] + pose_motion_pred  # bs T 6
+        print('MODIFICATION: reference pose in audio2pose.py')
+        pose_pred = ref[:, :, -6:] + pose_motion_pred  # bs T 6
 
         batch['pose_pred'] = pose_pred
         return batch
