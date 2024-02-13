@@ -47,6 +47,8 @@ def get_facerender_data(coeff_path, pic_path, first_coeff_path, audio_path,
 
     if 'full' in preprocess.lower():
         generated_3dmm = np.concatenate([generated_3dmm, np.repeat(source_semantics[:,70:], generated_3dmm.shape[0], axis=0)], axis=1)
+        ##### generated_3dmm = np.concatenate([generated_3dmm, source_semantics_dict['coeff_3dmm'][:generated_3dmm.shape[0],70:]], axis=1)
+        # generated_3dmm[:source_semantics_dict['coeff_3dmm'].shape[0], 70:] = source_semantics_dict['coeff_3dmm'][:, 70:] # if video is shorter than the audio, ovewrite from start only
 
     if still_mode:
         generated_3dmm[:, 64:] = np.repeat(source_semantics[:, 64:], generated_3dmm.shape[0], axis=0)
